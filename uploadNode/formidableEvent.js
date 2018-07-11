@@ -1,12 +1,19 @@
 var http = require('https');
 var formidable = require('formidable');
+var fs = require('fs');
 
-http.createServer((req, res) => {
-    if(req.url == '/fileupload') {
+
+http.createServer((req, res)  =>{
+    if (req.url == '/fileupload') {
         var form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
-            res.write('File uploaded');
+            var oldpath = files.filetoupload.path;
+            var newpath = 'C:/Users/grace/' + files.filetoupload.name;
+            fs.rename(oldpath, newpath, (err) => {
+            if (err) throw err;
+            res.write('File uploaded and moved!');
             res.end();
+            });
         });
     } else {
     res.writeHead(200, {'ContentType': 'text/html'});
